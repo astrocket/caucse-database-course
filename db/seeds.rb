@@ -309,6 +309,36 @@ asset_array.each do |unit|
   ) 
 end
 
+service_using_seed = "ALICE	 2,668 	 1,505 	 - 	 3,196 
+KIAF	 100 	 - 	 300 	 - 
+CMS(HCP)	 276 	 - 	 160 	 - 
+BELLE	 212 	 107 	 - 	 - 
+LIGO	 636 	 - 	 478 	 - 
+RENO	 432 	 - 	 710 	 - 
+BIO	 420 	 - 	 600 	 - 
+EPIG	 - 	 - 	 100 	 - 
+TEM	 420 	 - 	 500 	 - 
+PubSer	 60 	 - 	 - 	 - 
+ADMIN	 640 	 - 	 - 	 - 
+VHM	 8 	 - 	 200 	 - 
+Gcloud	 300 	 - 	 - 	 - 
+Brain	 - 	 - 	 - 	 - 
+VISUAL	 - 	 150 	 - 	 - 
+Open Science	 - 	 - 	 - 	 - "
+
+service_using_array = excelslicer(service_using_seed)
+service_using_array.each_with_index do |unit, index|
+   ServiceUsing.create(
+       {
+           :name => unit[0],
+           :core => unit[1],
+           :san => unit[2],
+           :nas => unit[3],
+           :tape => unit[4]
+       }
+   ) 
+end
+
 #자산번호	관리번호	현재위치	관리스펙	Core	IP
 server_seed = "10130490	S10006	본관 1층 공동서버실-C08	IBM BladeCenter HS22 Chassis3	12	
 10130490	S10007	본관 1층 공동서버실-C08	IBM BladeCenter HS22 Chassis3	12	
@@ -1003,6 +1033,71 @@ box_array.each_with_index do |unit, index|
                 :spec => unit[3]
             }
         )
+    end
+end
+
+storage_info_seed = "11130430	EMC SAN-1	2011.9.6	 7.2K 2T 	 SAN 	 11,000.00 	 623.05 	
+11130431	EMC SAN-2	2011.9.6	 7.2K 2T 	 SAN 	 11,000.00 	 623.05 	
+12130587	EMC Isilon 2012	2012.7.2	 7.2K 2T 	 NAS 	 99,737.60 	 1,461.00 	
+12131221	IBM TS3500	2012.11.27	 3592 4T 	 TAPE 		 3,196.00 	
+13130730	Hitachi VSP-1	2013.10.3	 10K 900G 	 SAN 	 4,095.99 	 150.98 	
+13130730	Hitachi VSP-1	2013.10.3	 7.2K 3T 	 SAN 	 4,095.99 	 352.60 	
+2015000036	Hitachi VSP-1	2015.2.10	 7.2K 4T 	 SAN 	 4,095.99 	 256.43 	
+2015000037	Hitachi VSP-2	2015.2.10	 SSD 	 SAN 	 2,453.47 	 9.58 	
+2015000037	Hitachi VSP-2	2015.2.10	 10K 1.2T 	 SAN 	 6,440.96 	 176.12 	
+2015000037	Hitachi VSP-2	2015.2.10	 7.2K 4T 	 SAN 	 21,882.88 	 384.66 	
+2015000927	EMC VNX8000	2015.9.9	 7.2K 4T 	 SAN 	 22,011.58 	 1,504.70 	
+2016000742	EMC Isilon 2016	2016.9.26	 7.2K 8T 	 NAS 	 193,536.00 	 3,024.00 	"
+
+storage_info_array = excelslicer(storage_info_seed)
+storage_info_array.each_with_index do |unit, index|
+    if Storage.where('number = ?', unit[0]).exists?
+        parent_storage = Storage.where('number = ?', unit[0]).take
+        
+        storage_info_unit = parent_storage.storage_infos.create(
+            {
+                :name => unit[1],
+                :registration_date => unit[2],
+                :disk_capacity => unit[3],
+                :type => unit[4],
+                :allocation_unit => unit[5],
+                :allocation_volume => unit[6],
+                :allocation_left => 0
+            }
+        )
+    end
+end
+
+box_info_array.each_with_index do |unit, index|
+    if Box.where('number = ?', unit[0].split(' - ')[1]).exists?
+        parent_box = Box.where('number = ?', unit[0].split(' - ')[1]).take
+
+        box_info_unit = parent_box.box_infos.create (
+            {
+                :location => unit[0].split(' - ')[0],
+                :index_start => unit[1],
+                :index_length => '',
+                :ip => unit[2],
+                :name => unit[4],
+                :color => unit[5]
+            }
+        )
+        
+        if box_info_unit.box.nil?
+            byebug
+        end
+        if unit[3].present?
+            if unit[3].split('')[0] == 'N'
+                if Switch.where('number = ?', unit[3]).exists?
+                    box_info_unit.switch = Switch.where('number = ?', unit[3]).take
+                end
+            elsif unit[3].split('')[0] == 'S'
+                if Server.where('number = ?', unit[3]).exists?
+                    box_info_unit.server = Server.where('number = ?', unit[3]).take
+                end
+            end
+            box_info_unit.save
+        end
     end
 end
 
