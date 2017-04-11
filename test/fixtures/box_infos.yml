@@ -1,0 +1,25 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  location: MyString
+  belongs_to: 
+  index_start: MyString
+  index_length: MyString
+  ip: MyString
+  belongs_to: 
+  belongs_to: 
+  name: MyString
+  color: MyString
+  belongs_to: 
+
+two:
+  location: MyString
+  belongs_to: 
+  index_start: MyString
+  index_length: MyString
+  ip: MyString
+  belongs_to: 
+  belongs_to: 
+  name: MyString
+  color: MyString
+  belongs_to: 

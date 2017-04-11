@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  number: 1
+  location: MyString
+  spec: MyString
+  core: 1
+  ip: MyString
+
+two:
+  number: 1
+  location: MyString
+  spec: MyString
+  core: 1
+  ip: MyString

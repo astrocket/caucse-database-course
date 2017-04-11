@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  core: 1
+  san: 1
+  nas: 1
+  tape: 1
+
+two:
+  name: MyString
+  core: 1
+  san: 1
+  nas: 1
+  tape: 1

@@ -1,0 +1,20 @@
+<form action='show' method="POST">
+  <div class="form-group">
+    <label for="exampleTextarea">Example textarea</label>
+    <textarea  name="data" class="form-control" id="exampleTextarea" rows="3"></textarea>
+  </div>
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+<table>
+    <% @asset.each do |asset| %>
+        <tr>
+            <td><%= asset.number %></td>
+            <td><%= asset.purchased_date %></td>
+            <td><%= asset.name %></td>
+            <td><%= asset.standard %></td>
+            <td><%= asset.price %></td>
+            <td><%= asset.seller %></td>
+            <td><%= asset.year %></td>
+        </tr>
+<% end %>
+</table>

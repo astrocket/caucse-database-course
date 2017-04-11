@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  allocation: 1
+  purpose: MyString
+  service_id: 
+
+two:
+  allocation: 1
+  purpose: MyString
+  service_id: 

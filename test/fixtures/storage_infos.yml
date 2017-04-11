@@ -1,0 +1,19 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  registration_date: 2017-04-11
+  disk_capacity: MyString
+  type: 
+  allocation_unit: 1
+  allocation_volume: 1
+  allocation_left: 1
+
+two:
+  name: MyString
+  registration_date: 2017-04-11
+  disk_capacity: MyString
+  type: 
+  allocation_unit: 1
+  allocation_volume: 1
+  allocation_left: 1
