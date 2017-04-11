@@ -309,22 +309,22 @@ asset_array.each do |unit|
   ) 
 end
 
-service_using_seed = "ALICE	 2,668 	 1,505 	 - 	 3,196 
-KIAF	 100 	 - 	 300 	 - 
-CMS(HCP)	 276 	 - 	 160 	 - 
-BELLE	 212 	 107 	 - 	 - 
-LIGO	 636 	 - 	 478 	 - 
-RENO	 432 	 - 	 710 	 - 
-BIO	 420 	 - 	 600 	 - 
-EPIG	 - 	 - 	 100 	 - 
-TEM	 420 	 - 	 500 	 - 
-PubSer	 60 	 - 	 - 	 - 
-ADMIN	 640 	 - 	 - 	 - 
-VHM	 8 	 - 	 200 	 - 
-Gcloud	 300 	 - 	 - 	 - 
-Brain	 - 	 - 	 - 	 - 
-VISUAL	 - 	 150 	 - 	 - 
-Open Science	 - 	 - 	 - 	 - "
+service_using_seed = "ALICE	 2,668 	 1,505 		 3,196 
+KIAF	 100 		 300 	
+CMS(HCP)	 276 		 160 	
+BELLE	 212 	 107 	 - 	
+LIGO	 636 		 478 	
+RENO	 432 		 710 	
+BIO	 420 		 600 	
+EPIG	 - 		 100 	
+TEM	 420 		 500 	
+PubSer	 60 			
+ADMIN	 640 			
+VHM	 8 		 200 	
+Gcloud	 300 			
+Brain				
+VISUAL		 150 		
+Open Science				"
 
 service_using_array = excelslicer(service_using_seed)
 service_using_array.each_with_index do |unit, index|
@@ -336,7 +336,38 @@ service_using_array.each_with_index do |unit, index|
            :nas => unit[3],
            :tape => unit[4]
        }
-   ) 
+   )
+end
+
+service_notusing_seed = "ALICE	 120 	 561 		
+KIAF				
+CMS(HCP)				
+BELLE				
+LIGO	 228 			
+RENO				
+BIO				
+EPIG				
+TEM				
+PubSer				
+ADMIN				
+VHM				
+Gcloud				
+Brain	 684 		 400 	
+VISUAL				
+Open Science			 500 	
+Open Science		 278 	 477 	 3,196 "
+
+service_notusing_array = excelslicer(service_notusing_seed)
+service_notusing_array.each_with_index do |unit, index|
+   ServiceNotusing.create(
+       {
+           :name => unit[0],
+           :core => unit[1],
+           :san => unit[2],
+           :nas => unit[3],
+           :tape => unit[4]
+       }
+   )
 end
 
 #자산번호	관리번호	현재위치	관리스펙	Core	IP
