@@ -1,6 +1,6 @@
-class CreateServiceNots < ActiveRecord::Migration
+class CreateServiceNotUsings < ActiveRecord::Migration
   def change
-    create_table :service_nots do |t|
+    create_table :service_not_usings do |t|
       t.string :name
       t.integer :core
       t.integer :san

@@ -11,7 +11,8 @@ class CreateBoxInfos < ActiveRecord::Migration
       t.belongs_to :box, index: true, foreign_key: true
       t.belongs_to :switch, index: true, foreign_key: true
       t.belongs_to :server, index: true, foreign_key: true
-      
+      t.belongs_to :service_using, index: true, foreign_key: true
+
       t.timestamps null: false
     end
   end

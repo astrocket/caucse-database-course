@@ -1,7 +1,11 @@
 source 'https://rubygems.org'
 
+gem 'table_print'
 gem 'rails_admin', '~> 1.1.1'
 gem 'rails_admin_charts'
+gem 'chartkick'
+
+
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.2.5'
 # Use sqlite3 as the database for Active Record
@@ -26,8 +30,6 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 
 #chartKick.com like morris.js ruby version
 #https://github.com/ankane/chartkick
-gem 'chartkick'
-
 
 
 

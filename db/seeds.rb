@@ -5,7 +5,7 @@
 #
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
-  def excelslicer(exceldata)
+def excelslicer(exceldata)
     rows = exceldata.split("\n")
     datas = []
     rows.length.times do |y|
@@ -16,7 +16,7 @@
       end
     end
     return datas
-  end
+end
 #자산번호	취득일	자산명	규격	취득원가	구입처	내용연수
 asset_seed = "10130490	2010-07-08	서버	블레이드 서버	 224,000,000 	 (주)네오인프라 	5
 11130430	2011-09-06	저장장치(스토리지 480개)	허브센터용 저장장치	 345,765,000 	 (주)한경아이넷-대전 	5
@@ -339,7 +339,7 @@ service_using_array.each_with_index do |unit, index|
    )
 end
 
-service_notusing_seed = "ALICE	 120 	 561 		
+service_not_using_seed = "ALICE	 120 	 561 		
 KIAF				
 CMS(HCP)				
 BELLE				
@@ -357,9 +357,9 @@ VISUAL
 Open Science			 500 	
 Open Science		 278 	 477 	 3,196 "
 
-service_notusing_array = excelslicer(service_notusing_seed)
-service_notusing_array.each_with_index do |unit, index|
-   ServiceNotusing.create(
+service_not_using_array = excelslicer(service_not_using_seed)
+service_not_using_array.each_with_index do |unit, index|
+   ServiceNotUsing.create(
        {
            :name => unit[0],
            :core => unit[1],
@@ -1067,177 +1067,155 @@ box_array.each_with_index do |unit, index|
     end
 end
 
-storage_info_seed = "11130430	EMC SAN-1	2011.9.6	 7.2K 2T 	 SAN 	 11,000.00 	 623.05 	
-11130431	EMC SAN-2	2011.9.6	 7.2K 2T 	 SAN 	 11,000.00 	 623.05 	
-12130587	EMC Isilon 2012	2012.7.2	 7.2K 2T 	 NAS 	 99,737.60 	 1,461.00 	
-12131221	IBM TS3500	2012.11.27	 3592 4T 	 TAPE 		 3,196.00 	
-13130730	Hitachi VSP-1	2013.10.3	 10K 900G 	 SAN 	 4,095.99 	 150.98 	
-13130730	Hitachi VSP-1	2013.10.3	 7.2K 3T 	 SAN 	 4,095.99 	 352.60 	
-2015000036	Hitachi VSP-1	2015.2.10	 7.2K 4T 	 SAN 	 4,095.99 	 256.43 	
-2015000037	Hitachi VSP-2	2015.2.10	 SSD 	 SAN 	 2,453.47 	 9.58 	
-2015000037	Hitachi VSP-2	2015.2.10	 10K 1.2T 	 SAN 	 6,440.96 	 176.12 	
-2015000037	Hitachi VSP-2	2015.2.10	 7.2K 4T 	 SAN 	 21,882.88 	 384.66 	
-2015000927	EMC VNX8000	2015.9.9	 7.2K 4T 	 SAN 	 22,011.58 	 1,504.70 	
-2016000742	EMC Isilon 2016	2016.9.26	 7.2K 8T 	 NAS 	 193,536.00 	 3,024.00 	"
+storage_info_seed = "11130430	EMC SAN-1	2011.9.6	7.2K 2T	 SAN	 11,000.00	 623.05	
+11130431	EMC SAN-2	2011.9.6	7.2K 2T	SAN	 11,000.00	 623.05	
+12130587	EMC Isilon 2012	2012.7.2	7.2K 2T	NAS	 99,737.60	 1,461.00	
+12131221	IBM TS3500	2012.11.27	3592 4T	TAPE		 3,196.00	
+13130730	Hitachi VSP-1	2013.10.3	10K 900G	SAN	 4,095.99	 150.98	
+13130730	Hitachi VSP-1	2013.10.3	7.2K 3T	SAN	 4,095.99	 352.60	
+2015000036	Hitachi VSP-1	2015.2.10	7.2K 4T	SAN	 4,095.99	 256.43	
+2015000037	Hitachi VSP-2	2015.2.10	SSD	SAN	 2,453.47	 9.58	
+2015000037	Hitachi VSP-2	2015.2.10	10K 1.2T	SAN	 6,440.96	 176.12	
+2015000037	Hitachi VSP-2	2015.2.10	7.2K 4T	SAN	 21,882.88	 384.66	
+2015000927	EMC VNX8000	2015.9.9	7.2K 4T	SAN	 22,011.58	 1,504.70	
+2016000742	EMC Isilon 2016	2016.9.26	7.2K 8T	NAS	 193,536.00	 3,024.00	"
 
 storage_info_array = excelslicer(storage_info_seed)
 storage_info_array.each_with_index do |unit, index|
-    if Storage.where('number = ?', unit[0]).exists?
-        parent_storage = Storage.where('number = ?', unit[0]).take
-        
-        storage_info_unit = parent_storage.storage_infos.create(
-            {
-                :name => unit[1],
-                :registration_date => unit[2],
-                :disk_capacity => unit[3],
-                :type => unit[4],
-                :allocation_unit => unit[5],
-                :allocation_volume => unit[6],
-                :allocation_left => 0
-            }
-        )
+    Storage.all.each do |storage_unit|
+        if storage_unit.asset.number == unit[0]
+           storage_info_unit = storage_unit.storage_infos
+           storage_info_unit.create(
+                {
+                    :name => unit[1],
+                    :registration_date => unit[2].to_date,
+                    :disk_capacity => unit[3],
+                    :storage_type => unit[4],
+                    :allocation_unit => unit[5].split(',').join.to_f,
+                    :allocation_volume => unit[6].split(',').join.to_f,
+                    :allocation_left => unit[6].split(',').join.to_f
+                }
+            )
+        end
     end
 end
 
-storage_allocation_seed = "11130431	EMC SAN-2	 7.2K 2T 	107.42	 BELLE 	 DATA 
-11130431	EMC SAN-2	 7.2K 2T 	75.2	 VISUAL 	 DATA01 
-11130431	EMC SAN-2	 7.2K 2T 	75.2	 VISUAL 	 DATA02 
-12130587	EMC Isilon 2012	 7.2K 2T 	300	 BIO 	 SCRATCH 
-12130587	EMC Isilon 2012	 7.2K 2T 	1	 ADMIN 	 ATLASSIAN 
-12130587	EMC Isilon 2012	 7.2K 2T 	5	 ADMIN 	 BACKUP 
-12130587	EMC Isilon 2012	 7.2K 2T 	10	 ADMIN 	 HOME 
-12130587	EMC Isilon 2012	 7.2K 2T 	10	 ADMIN 	 LOG 
-12130587	EMC Isilon 2012	 7.2K 2T 	2	 ADMIN 	 REPOS 
-12130587	EMC Isilon 2012	 7.2K 2T 	10	 ADMIN 	 RH_EXPORT 
-12130587	EMC Isilon 2012	 7.2K 2T 	1	 ADMIN 	 RH_ISO 
-12130587	EMC Isilon 2012	 7.2K 2T 	50	 CMS(HCP) 	 DATA01 
-12130587	EMC Isilon 2012	 7.2K 2T 	100	 CMS(HCP) 	 DATA02 
-12130587	EMC Isilon 2012	 7.2K 2T 	1	 CMS(HCP) 	 HOME 
-12130587	EMC Isilon 2012	 7.2K 2T 	1	 CMS(HCP) 	 LIB 
-12130587	EMC Isilon 2012	 7.2K 2T 	1	 LIGO 	 KAGRA_SCRATCH 
-12130587	EMC Isilon 2012	 7.2K 2T 	300	 LIGO 	 DATA01 
-12130587	EMC Isilon 2012	 7.2K 2T 	1	 LIGO 	 LDRDB 
-12130587	EMC Isilon 2012	 7.2K 2T 	320	 RENO 	 DATA01 
-12130587	EMC Isilon 2012	 7.2K 2T 	200	 RENO 	 DATA02 
-12130587	EMC Isilon 2012	 7.2K 2T 	130	 RENO 	 DATA03 
-12131221	IBM TS3500	 3592 4T 	3,196.00	 ALICE 	 TAPE 
-13130730	Hitachi VSP-1	 10K 900G 	20	 ALICE 	 XPT1219 
-13130730	Hitachi VSP-1	 10K 900G 	20	 ALICE 	 XPT1220 
-13130730	Hitachi VSP-1	 10K 900G 	4	 ALICE 	 TH01 
-13130730	Hitachi VSP-1	 10K 900G 	4	 ALICE 	 TH02 
-2015000037	Hitachi VSP-2	 SSD 	4.79	 ADMIN 	 LOG_01 
-2015000037	Hitachi VSP-2	 SSD 	4.79	 ADMIN 	 LOG_02 
-2015000037	Hitachi VSP-2	 10K 1.2T 	25.16	 ALICE 	 TP01 
-2015000037	Hitachi VSP-2	 10K 1.2T 	25.16	 ALICE 	 TP02 
-2015000037	Hitachi VSP-2	 10K 1.2T 	25.16	 ALICE 	 TP03 
-2015000037	Hitachi VSP-2	 10K 1.2T 	25.16	 ALICE 	 TP04 
-2015000037	Hitachi VSP-2	 10K 1.2T 	25.16	 ALICE 	 TP05 
-2015000037	Hitachi VSP-2	 10K 1.2T 	25.16	 ALICE 	 TP06 
-2015000037	Hitachi VSP-2	 10K 1.2T 	25.16	 ALICE 	 TP07 
-2015000037	Hitachi VSP-2	 10K 1.2T 	25.16	 ALICE 	 TP08 
-2015000037	Hitachi VSP-2	 7.2K 4T 	21.37	 ALICE 	 XPT1201 
-2015000037	Hitachi VSP-2	 7.2K 4T 	21.37	 ALICE 	 XPT1202 
-2015000037	Hitachi VSP-2	 7.2K 4T 	21.37	 ALICE 	 XPT1203 
-2015000037	Hitachi VSP-2	 7.2K 4T 	21.37	 ALICE 	 XPT1204 
-2015000037	Hitachi VSP-2	 7.2K 4T 	21.37	 ALICE 	 XPT1205 
-2015000037	Hitachi VSP-2	 7.2K 4T 	21.37	 ALICE 	 XPT1206 
-2015000037	Hitachi VSP-2	 7.2K 4T 	21.37	 ALICE 	 XPT1207 
-2015000037	Hitachi VSP-2	 7.2K 4T 	21.37	 ALICE 	 XPT1208 
-2015000037	Hitachi VSP-2	 7.2K 4T 	21.37	 ALICE 	 XPT1209 
-2015000037	Hitachi VSP-2	 7.2K 4T 	21.37	 ALICE 	 XPT1210 
-2015000037	Hitachi VSP-2	 7.2K 4T 	21.37	 ALICE 	 XPT1211 
-2015000037	Hitachi VSP-2	 7.2K 4T 	21.37	 ALICE 	 XPT1212 
-2015000037	Hitachi VSP-2	 7.2K 4T 	21.37	 ALICE 	 XPT1213 
-2015000037	Hitachi VSP-2	 7.2K 4T 	21.37	 ALICE 	 XPT1214 
-2015000037	Hitachi VSP-2	 7.2K 4T 	21.37	 ALICE 	 XPT1215 
-2015000037	Hitachi VSP-2	 7.2K 4T 	21.37	 ALICE 	 XPT1216 
-2015000037	Hitachi VSP-2	 7.2K 4T 	21.37	 ALICE 	 XPT1217 
-2015000037	Hitachi VSP-2	 7.2K 4T 	21.37	 ALICE 	 XPT1218 
-2015000927	EMC VNX8000	 7.2K 4T 	150.47	 ALICE 	 XP1001 
-2015000927	EMC VNX8000	 7.2K 4T 	150.47	 ALICE 	 XP1002 
-2015000927	EMC VNX8000	 7.2K 4T 	150.47	 ALICE 	 XP1003 
-2015000927	EMC VNX8000	 7.2K 4T 	150.47	 ALICE 	 XP1004 
-2015000927	EMC VNX8000	 7.2K 4T 	150.47	 ALICE 	 XP1005 
-2015000927	EMC VNX8000	 7.2K 4T 	150.47	 ALICE 	 XP1006 
-2015000927	EMC VNX8000	 7.2K 4T 	150.47	 ALICE 	 XP1007 
-2015000927	EMC VNX8000	 7.2K 4T 	150.47	 ALICE 	 XP1008 
-2015000927	EMC VNX8000	 7.2K 4T 	150.47	 ALICE 	 XP1009 
-2015000927	EMC VNX8000	 7.2K 4T 	150.47	 ALICE 	 XP1010 
-2016000742	EMC Isilon 2016	 7.2K 8T 	10	 TEM 	 TEM 
-2016000742	EMC Isilon 2016	 7.2K 8T 	0.15	 ADMIN 	 SEVER 
-2016000742	EMC Isilon 2016	 7.2K 8T 	0.06	 ADMIN 	 Daniel 
-2016000742	EMC Isilon 2016	 7.2K 8T 	0.1	 LIGO 	 KAGRA_HOME 
-2016000742	EMC Isilon 2016	 7.2K 8T 	0.5	 RENO 	 HOME 
-2016000742	EMC Isilon 2016	 7.2K 8T 	0.03	 BELLE 	 LIB01 
-2016000742	EMC Isilon 2016	 7.2K 8T 	0.05	 BELLE 	 LIB02 
-2016000742	EMC Isilon 2016	 7.2K 8T 	0.01	 RENO 	 LIB 
-2016000742	EMC Isilon 2016	 7.2K 8T 	5	 LIGO 	 HOME 
-2016000742	EMC Isilon 2016	 7.2K 8T 	20	 RENO 	 REFORM01 
-2016000742	EMC Isilon 2016	 7.2K 8T 	29.98	 LIGO 	 KAGRA_ARCHIVE 
-2016000742	EMC Isilon 2016	 7.2K 8T 	4.5	 BELLE 	 HOME 
-2016000742	EMC Isilon 2016	 7.2K 8T 	0.2	 BIO 	 HOME 
-2016000742	EMC Isilon 2016	 7.2K 8T 	0.1	 BIO 	 LIB 
-2016000742	EMC Isilon 2016	 7.2K 8T 	0.1	 LIGO 	 LIB 
-2016000742	EMC Isilon 2016	 7.2K 8T 	10	 LIGO 	 SCRATCH 
-2016000742	EMC Isilon 2016	 7.2K 8T 	32	 RENO 	 RAW01 
-2016000742	EMC Isilon 2016	 7.2K 8T 	50	 KIAF 	 DATA01 
-2016000742	EMC Isilon 2016	 7.2K 8T 	50	 KIAF 	 DATA02 
-2016000742	EMC Isilon 2016	 7.2K 8T 	50	 KIAF 	 DATA03 
-2016000742	EMC Isilon 2016	 7.2K 8T 	50	 KIAF 	 DATA04 
-2016000742	EMC Isilon 2016	 7.2K 8T 	50	 VHM 	 DATA01 
-2016000742	EMC Isilon 2016	 7.2K 8T 	50	 VHM 	 DATA02 
-2016000742	EMC Isilon 2016	 7.2K 8T 	50	 VHM 	 DATA03 
-2016000742	EMC Isilon 2016	 7.2K 8T 	50	 VHM 	 DATA04 "
+storage_allocation_seed = "11130431	EMC SAN-2	7.2K 2T	107.42	BELLE	 DATA 
+11130431	EMC SAN-2	7.2K 2T	75.2	VISUAL	 DATA01 
+11130431	EMC SAN-2	7.2K 2T	75.2	VISUAL	 DATA02 
+12130587	EMC Isilon 2012	7.2K 2T	300	BIO	 SCRATCH 
+12130587	EMC Isilon 2012	7.2K 2T	1	ADMIN	 ATLASSIAN 
+12130587	EMC Isilon 2012	7.2K 2T	5	ADMIN	 BACKUP 
+12130587	EMC Isilon 2012	7.2K 2T	10	ADMIN	 HOME 
+12130587	EMC Isilon 2012	7.2K 2T	10	ADMIN	 LOG 
+12130587	EMC Isilon 2012	7.2K 2T	2	ADMIN	 REPOS 
+12130587	EMC Isilon 2012	7.2K 2T	10	ADMIN	 RH_EXPORT 
+12130587	EMC Isilon 2012	7.2K 2T	1	ADMIN	 RH_ISO 
+12130587	EMC Isilon 2012	7.2K 2T	50	CMS(HCP)	 DATA01 
+12130587	EMC Isilon 2012	7.2K 2T	100	CMS(HCP)	 DATA02 
+12130587	EMC Isilon 2012	7.2K 2T	1	CMS(HCP)	 HOME 
+12130587	EMC Isilon 2012	7.2K 2T	1	CMS(HCP)	 LIB 
+12130587	EMC Isilon 2012	7.2K 2T	1	LIGO	 KAGRA_SCRATCH 
+12130587	EMC Isilon 2012	7.2K 2T	300	LIGO	 DATA01 
+12130587	EMC Isilon 2012	7.2K 2T	1	LIGO	 LDRDB 
+12130587	EMC Isilon 2012	7.2K 2T	320	RENO	 DATA01 
+12130587	EMC Isilon 2012	7.2K 2T	200	RENO	 DATA02 
+12130587	EMC Isilon 2012	7.2K 2T	130	RENO	 DATA03 
+12131221	IBM TS3500	3592 4T	3,196.00	ALICE	 TAPE 
+13130730	Hitachi VSP-1	10K 900G	20	ALICE	 XPT1219 
+13130730	Hitachi VSP-1	10K 900G	20	ALICE	 XPT1220 
+13130730	Hitachi VSP-1	10K 900G	4	ALICE	 TH01 
+13130730	Hitachi VSP-1	10K 900G	4	ALICE	 TH02 
+2015000037	Hitachi VSP-2	SSD	4.79	ADMIN	 LOG_01 
+2015000037	Hitachi VSP-2	SSD	4.79	ADMIN	 LOG_02 
+2015000037	Hitachi VSP-2	10K 1.2T	25.16	ALICE	 TP01 
+2015000037	Hitachi VSP-2	10K 1.2T	25.16	ALICE	 TP02 
+2015000037	Hitachi VSP-2	10K 1.2T	25.16	ALICE	 TP03 
+2015000037	Hitachi VSP-2	10K 1.2T	25.16	ALICE	 TP04 
+2015000037	Hitachi VSP-2	10K 1.2T	25.16	ALICE	 TP05 
+2015000037	Hitachi VSP-2	10K 1.2T	25.16	ALICE	 TP06 
+2015000037	Hitachi VSP-2	10K 1.2T	25.16	ALICE	 TP07 
+2015000037	Hitachi VSP-2	7.2K 4T	21.37	ALICE	 XPT1201 
+2015000037	Hitachi VSP-2	7.2K 4T	21.37	ALICE	 XPT1202 
+2015000037	Hitachi VSP-2	7.2K 4T	21.37	ALICE	 XPT1203 
+2015000037	Hitachi VSP-2	7.2K 4T	21.37	ALICE	 XPT1204 
+2015000037	Hitachi VSP-2	7.2K 4T	21.37	ALICE	 XPT1205 
+2015000037	Hitachi VSP-2	7.2K 4T	21.37	ALICE	 XPT1206 
+2015000037	Hitachi VSP-2	7.2K 4T	21.37	ALICE	 XPT1207 
+2015000037	Hitachi VSP-2	7.2K 4T	21.37	ALICE	 XPT1208 
+2015000037	Hitachi VSP-2	7.2K 4T	21.37	ALICE	 XPT1209 
+2015000037	Hitachi VSP-2	7.2K 4T	21.37	ALICE	 XPT1210 
+2015000037	Hitachi VSP-2	7.2K 4T	21.37	ALICE	 XPT1211 
+2015000037	Hitachi VSP-2	7.2K 4T	21.37	ALICE	 XPT1212 
+2015000037	Hitachi VSP-2	7.2K 4T	21.37	ALICE	 XPT1213 
+2015000037	Hitachi VSP-2	7.2K 4T	21.37	ALICE	 XPT1214 
+2015000037	Hitachi VSP-2	7.2K 4T	21.37	ALICE	 XPT1215 
+2015000037	Hitachi VSP-2	7.2K 4T	21.37	ALICE	 XPT1216 
+2015000037	Hitachi VSP-2	7.2K 4T	21.37	ALICE	 XPT1217 
+2015000037	Hitachi VSP-2	7.2K 4T	21.37	ALICE	 XPT1218 
+2015000927	EMC VNX8000	7.2K 4T	150.47	ALICE	 XP1001 
+2015000927	EMC VNX8000	7.2K 4T	150.47	ALICE	 XP1002 
+2015000927	EMC VNX8000	7.2K 4T	150.47	ALICE	 XP1003 
+2015000927	EMC VNX8000	7.2K 4T	150.47	ALICE	 XP1004 
+2015000927	EMC VNX8000	7.2K 4T	150.47	ALICE	 XP1005 
+2015000927	EMC VNX8000	7.2K 4T	150.47	ALICE	 XP1006 
+2015000927	EMC VNX8000	7.2K 4T	150.47	ALICE	 XP1007 
+2015000927	EMC VNX8000	7.2K 4T	150.47	ALICE	 XP1008 
+2015000927	EMC VNX8000	7.2K 4T	150.47	ALICE	 XP1009 
+2015000927	EMC VNX8000	7.2K 4T	150.47	ALICE	 XP1010 
+2016000742	EMC Isilon 2016	7.2K 8T	10	TEM	 TEM 
+2016000742	EMC Isilon 2016	7.2K 8T	0.15	ADMIN	 SEVER 
+2016000742	EMC Isilon 2016	7.2K 8T	0.06	ADMIN	 Daniel 
+2016000742	EMC Isilon 2016	7.2K 8T	0.1	LIGO	 KAGRA_HOME 
+2016000742	EMC Isilon 2016	7.2K 8T	0.5	RENO	 HOME 
+2016000742	EMC Isilon 2016	7.2K 8T	0.03	BELLE	 LIB01 
+2016000742	EMC Isilon 2016	7.2K 8T	0.05	BELLE	 LIB02 
+2016000742	EMC Isilon 2016	7.2K 8T	0.01	RENO	 LIB 
+2016000742	EMC Isilon 2016	7.2K 8T	5	LIGO	 HOME 
+2016000742	EMC Isilon 2016	7.2K 8T	20	RENO	 REFORM01 
+2016000742	EMC Isilon 2016	7.2K 8T	29.98	LIGO	 KAGRA_ARCHIVE 
+2016000742	EMC Isilon 2016	7.2K 8T	4.5	BELLE	 HOME 
+2016000742	EMC Isilon 2016	7.2K 8T	0.2	BIO	 HOME 
+2016000742	EMC Isilon 2016	7.2K 8T	0.1	BIO	 LIB 
+2016000742	EMC Isilon 2016	7.2K 8T	0.1	LIGO	 LIB 
+2016000742	EMC Isilon 2016	7.2K 8T	10	LIGO	 SCRATCH 
+2016000742	EMC Isilon 2016	7.2K 8T	32	RENO	 RAW01 
+2016000742	EMC Isilon 2016	7.2K 8T	50	KIAF	 DATA01 
+2016000742	EMC Isilon 2016	7.2K 8T	50	KIAF	 DATA02 
+2016000742	EMC Isilon 2016	7.2K 8T	50	KIAF	 DATA03 
+2016000742	EMC Isilon 2016	7.2K 8T	50	KIAF	 DATA04 
+2016000742	EMC Isilon 2016	7.2K 8T	50	VHM	 DATA01 
+2016000742	EMC Isilon 2016	7.2K 8T	50	VHM	 DATA02 
+2016000742	EMC Isilon 2016	7.2K 8T	50	VHM	 DATA03 
+2016000742	EMC Isilon 2016	7.2K 8T	50	VHM	 DATA04 "
 
 storage_allocation_array = excelslicer(storage_allocation_seed)
 storage_allocation_array.each_with_index do |unit, index|
-    storage_allocation_unit = StorageAllocation.create(
-        {
-            :allocation => unit[3],
-            :purpose => unit[5]
-        }
-    )
-    if StorageInfo.where('number = ?', unit[0]).exists?
-        parent_storage_info = StorageInfo.where('number = ?', unit[0]).take
-        parent_storage_info.storage_allocations << storage_allocation_unit
-    end
-    
     if ServiceUsing.where('name = ?', unit[4]).exists?
-        storage_allocation_unit.service = ServiceUsing.where('name = ?', unit[4]).take
-    end
-end
-
-box_info_array.each_with_index do |unit, index|
-    if Box.where('number = ?', unit[0].split(' - ')[1]).exists?
-        parent_box = Box.where('number = ?', unit[0].split(' - ')[1]).take
-
-        box_info_unit = parent_box.box_infos.create (
+        parent_service_using = ServiceUsing.where('name = ?', unit[4]).take
+        storage_allocation_unit = parent_service_using.storage_allocations.create(
             {
-                :location => unit[0].split(' - ')[0],
-                :index_start => unit[1],
-                :index_length => '',
-                :ip => unit[2],
-                :name => unit[4],
-                :color => unit[5]
+                :allocation => unit[3].split(',').join.to_f,
+                :purpose => unit[5]
             }
         )
-        
-        if box_info_unit.box.nil?
-            byebug
-        end
-        if unit[3].present?
-            if unit[3].split('')[0] == 'N'
-                if Switch.where('number = ?', unit[3]).exists?
-                    box_info_unit.switch = Switch.where('number = ?', unit[3]).take
-                end
-            elsif unit[3].split('')[0] == 'S'
-                if Server.where('number = ?', unit[3]).exists?
-                    box_info_unit.server = Server.where('number = ?', unit[3]).take
-                end
-            end
-            box_info_unit.save
+       Storage.all.each do |storage_unit|
+           if storage_unit.asset.number == unit[0]
+               storage_unit.storage_infos.each do |storage_info_unit|
+                   if storage_info_unit.disk_capacity == unit[2]
+                       storage_info_unit.storage_allocations << storage_allocation_unit
+                       storage_info_unit.allocation_left = storage_info_unit.allocation_left - storage_allocation_unit.allocation
+                       if storage_info_unit.allocation_left < 0.0001
+                           storage_info_unit.allocation_left = 0
+                       end
+                   end
+                   storage_info_unit.save
+               end
+           end
         end
     end
+    
+
 end
 
 box_info_seed = "R00 - R11003	42					
@@ -2223,9 +2201,6 @@ box_info_array.each_with_index do |unit, index|
             }
         )
         
-        if box_info_unit.box.nil?
-            byebug
-        end
         if unit[3].present?
             if unit[3].split('')[0] == 'N'
                 if Switch.where('number = ?', unit[3]).exists?
@@ -2236,7 +2211,13 @@ box_info_array.each_with_index do |unit, index|
                     box_info_unit.server = Server.where('number = ?', unit[3]).take
                 end
             end
-            box_info_unit.save
         end
+        
+        if unit[6].present?
+            if ServiceUsing.where('name = ?', unit[6]).exists?
+                box_info_unit.service_using = ServiceUsing.where('name = ?', unit[6]).take
+            end
+        end
+        box_info_unit.save
     end
 end

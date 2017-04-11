@@ -5,123 +5,23 @@
 <title>DB Team PROJECT </title>
 </head>
 <body>
-  <h3 class="text-primary text-center"> DB 팀 프로젝트 <a href = https://dbteam--kyung2.c9users.io/admin >바로가기 </a></h3>
+  <h3 class="text-primary text-center"> DB 팀 프로젝트 <a href = https://database-project-astrocket.c9users.io/admin >바로가기 </a></h3>
   
-  <!--
-  <div class"row">
-
-    <div class="col-sm-3 col-sm-offset-3 text-center">
-      <p>ALICE    <label class="label label-success">cpu</label> </p>
-      <div id="ALICE" ></div>
+    <div class="text-center">
+      <td> <%= pie_chart ServiceUsing.group(:name).count(:core) %></td>
+      <td > Core</td>
+      <hr>
     </div>
-    
-    <div class="col-sm-3 col-sm-offset-3 text-center">
-      <p>KIAF    <label class="label label-success">cpu</label> </p>
-      <div id="KIAF" ></div>
-    </div>
-    <div class="col-sm-3 col-sm-offset-3 text-center">
-      <p>CMS(T3)    <label class="label label-success">cpu</label> </p>
-      <div id="CMST3" ></div>
-    </div>
-    
-    <div class="col-sm-3 col-sm-offset-3 text-center">
-      <p>CMS(T2)<label class="label label-success">cpu</label> </p>
-      <div id="CMST2" ></div>
-    </div>
-    
-    <div class="col-sm-3 col-sm-offset-3 text-center">
-      <p>CMS(HCP)    <label class="label label-success">cpu</label> </p>
-      <div id="CMSHCP" ></div>
-    </div>
-    <div class="col-sm-3 col-sm-offset-3 text-center">
-      <p>BELLE <label class="label label-success">cpu</label> </p>
-      <div id="BELLE" ></div>
-    </div>
-    
-        <div class="col-sm-3 col-sm-offset-3 text-center">
-      <p>LIGO <label class="label label-success">cpu</label> </p>
-      <div id="LIGO" ></div>
-    </div>
-    
-        <div class="col-sm-3 col-sm-offset-3 text-center">
-      <p>RENO <label class="label label-success">cpu</label> </p>
-      <div id="RENO" ></div>
-    </div>
-    
-            <div class="col-sm-3 col-sm-offset-3 text-center">
-      <p>BIO <label class="label label-success">cpu</label> </p>
-      <div id="BIO" ></div>
-    </div>
-    
-    
-            <div class="col-sm-3 col-sm-offset-3 text-center">
-      <p>EPIG <label class="label label-success">cpu</label> </p>
-      <div id="EPIG" ></div>
-    </div>
-    
-                <div class="col-sm-3 col-sm-offset-3 text-center">
-      <p>TEM <label class="label label-success">cpu</label> </p>
-      <div id="TEM" ></div>
-    </div>
-    
-                <div class="col-sm-3 col-sm-offset-3 text-center">
-      <p>PUBSER<label class="label label-success">cpu</label> </p>
-      <div id="PUBSER" ></div>
-    </div>
-    
-                <div class="col-sm-3 col-sm-offset-3 text-center">
-      <p>ADMIN <label class="label label-success">cpu</label> </p>
-      <div id="ADMIN_" ></div>
-    </div>
-    
-    
-                <div class="col-sm-3 col-sm-offset-3 text-center">
-      <p>VHM <label class="label label-success">cpu</label> </p>
-      <div id="VHM" ></div>
-    </div>
-    
-                <div class="col-sm-3 col-sm-offset-3 text-center">
-      <p>GCLOUD <label class="label label-success">cpu</label> </p>
-      <div id="GCLOUD" ></div>
-    </div>
-    
-    
-                <div class="col-sm-3 col-sm-offset-3 text-center">
-      <p>BRAIN <label class="label label-success">cpu</label> </p>
-      <div id="BRAIN" ></div>
-    </div>
-    
-                <div class="col-sm-3 col-sm-offset-3 text-center">
-      <p>VISUAL <label class="label label-success">cpu</label> </p>
-      <div id="VISUAL" ></div>
-    </div>
-    
-                <div class="col-sm-3 col-sm-offset-3 text-center">
-      <p>OPEN SCIENCE <label class="label label-success">cpu</label> </p>
-      <div id="OPENSCIENCE" ></div>
-    </div>
-    
-    
-                <div class="col-sm-3 col-sm-offset-3 text-center">
-      <p>FREE<label class="label label-success">cpu</label> </p>
-      <div id="FREE" ></div>
-    </div>
-    
-    
-    
-    
-    
-    
-                <div class="col-sm-3 col-sm-offset-3 text-center">
-      <p>EPIG <label class="label label-success">cpu</label> </p>
-      <div id="EPIG" ></div>
-    </div>
-    
-    
-    
-    
-    
-    
-  </div>
-  -->
+        
+    <div class="text-center">
+      <td> <%= pie_chart Storage.group(:number).count %></td>
+      <td > Grapj2</td>
+      <hr>
+      </div>
+        
+    <div class="text-center">
+      <td> <%= pie_chart Storage.group(:number).count %></td>
+      <td > Grap3</td>
+      <hr>
+      </div>
 </body>
