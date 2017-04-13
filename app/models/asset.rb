@@ -1,6 +1,6 @@
 class Asset < ActiveRecord::Base
-    has_many :servers
-    has_many :switches
-    has_many :storages
-    has_many :boxes
+    has_many :servers, :dependent => :destroy
+    has_many :switches, :dependent => :destroy
+    has_many :storages, :dependent => :destroy
+    has_many :boxes, :dependent => :destroy
 end

@@ -1,5 +1,12 @@
 RailsAdmin.config do |config|
   config.total_columns_width = 1200
+  
+  config.navigation_static_links = {
+	  'CAU Portal' => 'http://portal.cau.ac.kr/_layouts/Cau/Member/Login.aspx?d=20121218&ReturnUrl=%2f_layouts%2fAuthenticate.aspx%3fSource%3d%252F&Source=%2F',
+	  'CAUCSE' => 'http://cse.cau.ac.kr/20141201/main/main.php',
+	  'UCLAB' => 'http://uclab.re.kr',
+	  'Thanks to' => 'http://dingcosticker.com'
+	}
   ### Popular gems integration
 
   ## == Devise ==
@@ -47,6 +54,7 @@ RailsAdmin.config do |config|
     end
 
     list do
+      items_per_page 50
       field :number do
         label '자 산 번 호'
       end
@@ -166,7 +174,7 @@ RailsAdmin.config do |config|
   end
 
   config.model 'BoxInfo' do
-    label '랙(정보)'
+    label '랙(info)'
     parent Box
     object_label_method do
       :name_label_method
@@ -177,7 +185,6 @@ RailsAdmin.config do |config|
 
       field :location do
         label '위치'
-
       end
       field :box do
         label 'Rack(랙)'
@@ -194,25 +201,53 @@ RailsAdmin.config do |config|
       field :switch do
         label '스위치'
       end
-      field :service_using do
+      field :service do
         label '서비스명'
       end
       exclude_fields :created_at, :updated_at
     end
   end
+  
+  config.model 'Service' do
+    label '서비스(Service)'
+    list do
+      field :service_using do
+        label do
+          '서비스(Using)'
+        end
+      end
+      field :service_not_using do
+        label do
+          '서비스(NotUsing)'
+        end
+      end
+      field :box_infos do
+        label do
+          '랙(정보)'
+        end
+      end
+      field :storage_allocations do
+        label do
+          '스토리지(할당)'
+        end
+      end
+    end
+    exclude_fields :created_at, :updated_at
+  end
 
   config.model 'ServiceUsing' do
-    label '서비스(사용중)'
+    parent Service
+    label '서비스(Using)'
     object_label_method do
-      :name_label_method
+      :service_label_method
     end
 
     list do
-      field :name do
-        label '이름'
+      field :service do
+        label '서비스명'
       end
       field :core do
-        label 'core'
+        'fe'
       end
       field :san do
         label 'san'
@@ -223,25 +258,21 @@ RailsAdmin.config do |config|
       field :tape do
         label 'tape'
       end
-      field :storage_allocations do
-        label do
-          self.box_infos
-        end
-      end
       exclude_fields :created_at, :updated_at
     end
   end
 
 
   config.model 'ServiceNotUsing' do
-    label '서비스(사용대기)'
+    parent Service
+    label '서비스(NotUsing)'
     object_label_method do
-      :name_label_method
+      :service_label_method
     end
 
     list do
-      field :name do
-        label '이름'
+      field :service do
+        label '서비스명'
       end
       field :core do
         label 'core'
@@ -261,10 +292,10 @@ RailsAdmin.config do |config|
 
 
   config.model 'StorageInfo' do
-    label '스토리지 인포'
+    label '스토리지(Info)'
     parent Storage
     object_label_method do
-      :name_label_method
+      :storage_info_label_method
     end
 
     list do
@@ -289,13 +320,18 @@ RailsAdmin.config do |config|
       field :allocation_left do
         label '가용량(TB)'
       end
+      field :storage_allocations do
+        label do
+          "#{self.allocation}/#{self.purpose}/#{self.service}"
+        end
+      end
       exclude_fields :created_at, :updated_at
     end
   end
 
   config.model 'StorageAllocation' do
-    label '스토리지 할당량'
-    parent Storage
+    label '스토리지(Allocation)'
+    parent StorageInfo
     object_label_method do
       :purpose_label_method
     end
@@ -307,7 +343,7 @@ RailsAdmin.config do |config|
       field :purpose do
         label "용도"
       end
-      field :service_using do
+      field :service do
         label "서비스명"
       end
       field :allocation do
@@ -327,8 +363,31 @@ RailsAdmin.config do |config|
   def name_label_method
     self.name
   end
+  
+  def storage_info_label_method
+    self.name + "(#{self.storage_type}, #{self.disk_capacity})"
+  end
 
   def purpose_label_method
     self.purpose
   end
+  
+  def service_label_method
+    "#{self.service.name}(Core : #{self.core} / San : #{self.san} / Nas : #{self.nas} / Tape : #{self.tape})"
+  end
+  
+  def core_label_method
+    core = 0
+    self.service.box_infos.each do |box_info|
+      core = core + box_info.server.core
+    end
+    core
+  end
+
 end
+
+
+#rake db:drop
+#rake db:migrate
+#rake db:seed
+#순서대로 해주면 모델 시드 다시 생성 된다.

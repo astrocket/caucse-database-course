@@ -1,27 +1,73 @@
 
-
-<head>
-<meta charset=utf-8 />
-<title>DB Team PROJECT </title>
-</head>
-<body>
-  <h3 class="text-primary text-center"> DB 팀 프로젝트 <a href = https://database-project-astrocket.c9users.io/admin >바로가기 </a></h3>
-  
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+  <h3 class="text-primary text-center"> <a href = https://database-project-astrocket.c9users.io/admin > 관리자 페이지</a></h3>
+  <!--<%= @storage_san_sum %>
     <div class="text-center">
-      <td> <%= pie_chart ServiceUsing.group(:name).count(:core) %></td>
-      <td > Core</td>
+      <td > Core_not using</td>
       <hr>
-    </div>
-        
+    </div> 
+    
     <div class="text-center">
-      <td> <%= pie_chart Storage.group(:number).count %></td>
+      <td>#<%= pie_chart Storage.group(:number).count %></td>
       <td > Grapj2</td>
       <hr>
-      </div>
-        
-    <div class="text-center">
-      <td> <%= pie_chart Storage.group(:number).count %></td>
-      <td > Grap3</td>
-      <hr>
-      </div>
-</body>
+    </div>-->
+      
+    
+    <div class="row  text-center ">
+    <div class ="col-xs-12 col-md-12">  <h1> Service 용량 </h1> </div>
+  <div class="col-xs-12 col-md-6"><tr><td><%= pie_chart ({"가용량" => @storage_left , "사용량" => @storage_using}) , donut: true  %> </td></tr>
+  
+  <tr>
+    <td>서</td></tr>
+</div>
+
+  <div class="col-xs-12 col-md-6"><tr><td><%= pie_chart ({"SAN Using" => @storage_using_san_sum , "SAN NOT Using" => @storage_notusing_san_sum, "SAN 가용량" => @storage_san_available}) , donut: true  %></td></tr>
+  
+  <tr>
+    <td>SAN 총 용량</td></tr></div>
+  <div class="col-xs-12 col-md-6"><tr><td><%= pie_chart ({"NAS Using" => @storage_using_nas_sum , "NAS NOT Using" => @storage_notusing_nas_sum, "NAS 가용량" => @storage_nas_available}) , donut: true  %></td></tr>
+  
+  <tr>
+    <td>NAS 총 용량</td></tr></div>
+  <div class="col-xs-12 col-md-6"><tr><td><%= pie_chart ({"TAPE Using" => @storage_using_tape_sum , "TAPE NOT Using" => @storage_notusing_tape_sum, "TAPE 가용량" => @storage_tape_available}) , donut: true  %></td></tr>
+  
+  <tr>
+    <td>TAPE 총 용량</td></tr>
+    </div>
+    </div>
+    
+    
+    
+    <div class="row  text-center ">
+    <div class ="col-xs-12 col-md-12">  <h1> DISK 용량 </h1> </div>
+  <div class="col-xs-12 col-sm-12 col-s-6 col-md-3"><tr><td><%= pie_chart ({"가용량" => @storage_left , "사용량" => @storage_using}) , donut: true  %> </td></tr>
+  
+  <tr>
+    <td>DISK 총 용량</td></tr>
+</div>
+
+  <div class="col-xs-12 col-sm-12 col-s-6 col-md-3"><tr><td><%= pie_chart ({"SAN Using" => @storage_using_san_sum , "SAN NOT Using" => @storage_notusing_san_sum, "SAN 가용량" => @storage_san_available}) , donut: true  %></td></tr>
+  
+  <tr>
+    <td>SAN 총 용량</td></tr></div>
+  <div class="col-xs-12 col-sm-12 col-s-6 col-md-3"><tr><td><%= pie_chart ({"NAS Using" => @storage_using_nas_sum , "NAS NOT Using" => @storage_notusing_nas_sum, "NAS 가용량" => @storage_nas_available}) , donut: true  %></td></tr>
+  
+  <tr>
+    <td>NAS 총 용량</td></tr></div>
+  <div class="col-xs-12 col-sm-12 col-s-6 col-md-3"><tr><td><%= pie_chart ({"TAPE Using" => @storage_using_tape_sum , "TAPE NOT Using" => @storage_notusing_tape_sum, "TAPE 가용량" => @storage_tape_available}) , donut: true  %></td></tr>
+  
+  <tr>
+    <td>TAPE 총 용량</td></tr>
+    </div>
+    </div>
+    
+    <div class = "text-center">
+    <p> <font size="4" color="white" >CAUCSE 2017 SPRING DB SYSTEM & PROGRMMING PROJECT MADE BY ASTRO,KYUNG2,EUNJI</font></p>
+    <p> <font size="2" color="white" >Thank for UCLAB Member, LikeLion at CAU</font></p>
+    </div>

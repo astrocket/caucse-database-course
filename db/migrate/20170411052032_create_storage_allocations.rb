@@ -4,7 +4,7 @@ class CreateStorageAllocations < ActiveRecord::Migration
       t.float :allocation
       t.string :purpose
       
-      t.belongs_to :service_using, index: true, foreign_key: true
+      t.belongs_to :service, index: true, foreign_key: true
       t.belongs_to :storage_info, index: true, foreign_key: true
 
       t.timestamps null: false
